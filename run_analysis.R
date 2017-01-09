@@ -14,17 +14,20 @@ testMoves <- read.delim("test/Y_test.txt", sep = "", header = FALSE)
 trainMoves <- read.delim("train/Y_train.txt", sep = "", header = FALSE)
 mergedMoves <- rbind(testMoves, trainMoves)
 
-## Persons participating to testing and training are read and merged
-testPerson <- read.delim("test/subject_test.txt", sep = "", header = FALSE)
-trainPerson <- read.delim("train/subject_train.txt", sep = "", header = FALSE)
-mergedPerson <- rbind(testPerson, trainPerson)
+## Subjects participating to testing and training are read and merged
+testSubject <- read.delim("test/subject_test.txt", sep = "", header = FALSE)
+trainSubject <- read.delim("train/subject_train.txt", sep = "", header = FALSE)
+mergedSubject <- rbind(testSubject, trainSubject)
 
 ## Only the variables referring to mean and Std are retained
 names(mergedSet) <- features[,1]
 withMeanOrStd <- grepl("std|mean", names(mergedSet), ignore.case = TRUE)
 mergedSet <- mergedSet[ withMeanOrStd ] 
 
-## Descriptive PersonID and Activity are used as variable names
+## Descriptive Subject and Activity are used as variable names
 mergedMoves <- merge(mergedMoves, activity, by.x = "V1", by.y = "V1")[2]
-mergedSet <- cbind(mergedPerson, mergedMoves, mergedSet)
-names(mergedSet)[1:2] <- c("PersonID", "Activity")
+mergedSet <- cbind(mergedSubject, mergedMoves, mergedSet)
+names(mergedSet)[1:2] <- c("Subject", "Activity")
+
+mergedSet$Subject <- as.factor(mergedSet$Subject)
+
